@@ -7,8 +7,17 @@ This repository contains some useful functions to run a model based on the Neuro
 In the main.py script are two example cases to use som function in utility.py
 
 
-Results from a run
+Some results example case 2:
 ======================
+
+Terminal:
+----------------------
+```
+$ python3 main() 2
+```
+
+Results:
+----------------------
 
 If the generation of the images is available, the following plots will appear:
 Fitness results for a 10 generation run of Recurrent Neural Network:
