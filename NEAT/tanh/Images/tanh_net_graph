@@ -1,0 +1,18 @@
+digraph {
+	node [fontsize=9 height=0.2 shape=circle width=0.2]
+	"sepal length (cm)" [fillcolor=lightgray shape=box style=filled]
+	"sepal width (cm)" [fillcolor=lightgray shape=box style=filled]
+	"petal length (cm)" [fillcolor=lightgray shape=box style=filled]
+	"petal width (cm)" [fillcolor=lightgray shape=box style=filled]
+	setosa [fillcolor=lightblue style=filled]
+	versicolor [fillcolor=lightblue style=filled]
+	virginica [fillcolor=lightblue style=filled]
+	"petal width (cm)" -> versicolor [color=green penwidth=0.207991059868393 style=solid]
+	"sepal width (cm)" -> virginica [color=red penwidth=0.1739370785649711 style=dotted]
+	"sepal width (cm)" -> setosa [color=red penwidth=0.2706746216347432 style=dotted]
+	"petal width (cm)" -> virginica [color=green penwidth=0.3754541842629435 style=solid]
+	"sepal width (cm)" -> versicolor [color=red penwidth=0.22952877321258888 style=solid]
+	"petal length (cm)" -> virginica [color=green penwidth=0.11659999714834823 style=dotted]
+	"petal width (cm)" -> setosa [color=green penwidth=0.1790292981437685 style=dotted]
+	"sepal length (cm)" -> setosa [color=red penwidth=0.3704183270136101 style=dotted]
+}
