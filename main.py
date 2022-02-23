@@ -10,7 +10,7 @@ from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
 
 def one_run():
-
+    """Create and view only one model without save anything"""
     act= 'vary'
     base = 'NEAT'
     config_name = 'config-recurrent'
@@ -84,6 +84,7 @@ def new_evolution(): #Example case 2
 
 
 def fit_and_test_winner():
+    """This function allows to get an existing neat model, fit and test it"""
     global X_train, X_test, y_train, y_test, feature_names, target_names
 
     # An old winner that has 3 types of activation function.

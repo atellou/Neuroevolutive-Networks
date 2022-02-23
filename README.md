@@ -30,5 +30,5 @@ Graph of the speciation:
 ![alt text](https://github.com/atellou/Neuroevolutive-Networks/blob/main/NEAT/relu/Images/relu_speciation.svg.svg)
 
 
-Additionally, the scores and winners will be saved in the folder NEAT
+Additionally, the scores and winners will remain in the folder NEAT
 
