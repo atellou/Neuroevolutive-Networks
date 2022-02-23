@@ -6,7 +6,8 @@ import sklearn
 import visualize
 import pickle   
 import neat
-
+import uuid
+import os
 '####### Neuroevolutive algorithm ######'
 
 class fitness_func(object):
@@ -129,7 +130,16 @@ def run(config, test_x, test_y, fitness,
             f.close()
     node_names = crate_nodes(feats, targets, test_x, test_y)
     if not (save):
+        name_net = str(uuid.uuid4())
+        visualize.draw_net(config, winner, view=view, node_names=node_names, filename= name_net)
+        visualize.plot_stats(stats, ylog=False, view=view, filename=filename_fitness + '.svg')
+        visualize.plot_species(stats, view=view, filename=filename_spec + '.svg')
+
+        os.remove(name_net)
+        os.remove(name_net+'.svg')
         return winner, prediction, stats
+
+    print('save images')
     visualize.draw_net(config, winner, view=view, node_names=node_names, filename=filename_net)
     visualize.plot_stats(stats, ylog=False, view=view, filename=filename_fitness + '.svg', save=save)
     visualize.plot_species(stats, view=view, filename=filename_spec + '.svg', save=save)

@@ -1,11 +1,49 @@
 
 import neuroevo as ne
 import utility as ut
-from sklearn.datasets import load_iris
+import numpy as np
+import pandas as pd
 import sys
+import os
+import sklearn.metrics
+from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
 
-#def one_run():
+def one_run():
+
+    act= 'vary'
+    base = 'NEAT'
+    config_name = 'config-recurrent'
+
+    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa']}
+    act_functions = ['relu', 'sigmoid', 'tanh', 'vary']
+
+    row, col = np.shape(X_train)  # No. Samples and Features
+    n_targets = len(list(dict.fromkeys(y_train)))  # No. targets
+
+    if act == 'vary':
+        config = ut.modify_config(os.path.join(base, config_name),  # crate the config file
+                                activation_def='relu', fitnes_th=1, n_inputs=col, n_outputs=n_targets,
+                                activation_opt=act_functions[:-1])
+    else:
+        config = ut.modify_config(os.path.join(base, config_name),  # crate the config file
+                                activation_def=act, fitnes_th=1, n_inputs=col, n_outputs=n_targets)
+    fitness = ne.fitness_func(X_train,
+                            y_train)  # create the object to store the train data and pass the fitness function
+    winner, predictions, stats = ne.run(config,
+                                    X_test, y_test, fitness,
+                                    generations=10,
+                                    save_check=0, save=0, save_best=0,
+                                    verbose=1, view=1, feats=feature_names, targets=target_names)
+    pred_targets = np.argmax(predictions, axis=1)
+    recall = sklearn.metrics.recall_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
+    f1_score = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
+    presicion = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(n_targets),
+                                                average='weighted')
+    kappa = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(n_targets))
+    scores[act] = [winner.fitness, f1_score, recall, presicion, kappa]
+    print('Termine ', os.path.join(base, act))
+    print(pd.DataFrame(scores, index=scores['columns']).drop(['columns'], axis=1).T)
 
 
 def new_evolution(): #Example case 2
@@ -79,7 +117,9 @@ if __name__ == "__main__":
 
     print('Runnning example case',sys.argv[1])
 
-    if int(sys.argv[1]) == 2:
+    if int(sys.argv[1]) == 1:
+        one_run()
+    elif int(sys.argv[1]) == 2:
         new_evolution() # Warning: In the files_tour all the plot and save options are enabled
     elif int(sys.argv[1]) == 3:
         fit_and_test_winner()
