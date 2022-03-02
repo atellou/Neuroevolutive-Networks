@@ -87,7 +87,7 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
     :param rerun: (Boolean) If True it will ignore if alredy exist a winner for all the activation functions between the options
     :return: A Dataframe containing the results obtained"""
     
-    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa']}
+    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa','c_matrix']}
     act_functions = ['relu', 'sigmoid', 'tanh', 'vary']
     save_im = 'Images'
     save_ch = 'Check'
@@ -192,4 +192,5 @@ def bring_NEAT_model(X_train, X_test, y_train, y_test, config_path, model_path, 
     scores['f1_score'] = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(3), average='weighted')
     scores['precision'] = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(3), average='weighted')
     scores['kappa'] = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(3))
+    scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(3), normalize='true')
     return winner_net, y_test, pred_targets, scores

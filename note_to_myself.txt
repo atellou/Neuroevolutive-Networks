@@ -1,0 +1,20 @@
+import pandas as pd
+import numpy as np
+import utility as ut
+X_train = np.array(pd.read_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/X_train.csv').values)
+X_test = np.array(pd.read_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/X_test.csv').values)
+y_test = np.array(pd.read_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/y_test.csv').values)
+y_train = np.array(pd.read_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/y_train.csv').values)
+
+vary1=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/config-recurrent',
+                     'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/Winners - 1000g/vary_winner.plk', 'vary',
+                     act_functions = ['relu','sigmoid','tanh','vary'])
+vary=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/config-recurrent',
+                     'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/Winners/vary_winner.plk', 'vary',
+                     act_functions = ['relu','sigmoid','tanh','vary'])
+tanh=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/config-recurrent',
+                     'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/Winners/tanh_winner.plk', 'tanh',
+                     act_functions = ['relu','sigmoid','tanh','vary'])
+sigmoid=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/config-recurrent', 
+                    'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/Winners/sigmoid_winner.plk', 'sigmoid',
+                     act_functions = ['relu','sigmoid','tanh','vary'])
