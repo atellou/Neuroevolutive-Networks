@@ -18,3 +18,9 @@ tanh=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andr
 sigmoid=ut.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/config-recurrent', 
                     'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT/Winners/sigmoid_winner.plk', 'sigmoid',
                      act_functions = ['relu','sigmoid','tanh','vary'])
+
+
+base = 'C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/NEAT2'
+config_name = 'config-recurrent'
+scores = ut.files_tour(X_train,X_test,y_train,y_test,base, 1000, config_name,
+                       ret_check=0, rerun=1)                     

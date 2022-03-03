@@ -28,7 +28,7 @@ class fitness_func(object):
             net = neat.nn.RecurrentNetwork.create(genome, config)
             predictions = [net.activate(xi) for xi in self.train_x]
             confusion_mat = sklearn.metrics.confusion_matrix(self.train_y, np.argmax(predictions, axis=1),
-                                                        labels=range(len(list(dict.fromkeys(y_train)))), normalize='true')
+                                                        labels=range(len(list(dict.fromkeys(self.y_train)))), normalize='true')
             genome.fitness = np.mean(np.diagonal(confusion_mat))
 
 
