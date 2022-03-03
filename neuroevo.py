@@ -14,7 +14,7 @@ class fitness_func(object):
     def __init__(self, train_x, train_y):
         self.train_x, self.train_y = train_x, train_y
 
-    def eval_genomes(self, genomes, config):
+    def eval_f1(self, genomes, config):
         for genome_id, genome in genomes:
             genome.fitness = 0.0
             net = neat.nn.RecurrentNetwork.create(genome, config)
@@ -22,6 +22,14 @@ class fitness_func(object):
             genome.fitness = sklearn.metrics.f1_score(self.train_y, np.argmax(predictions, axis=1),
                                                       labels=range(len(list(dict.fromkeys(self.train_y)))),
                                                       average='weighted')
+    def eval_conf_diag(self, genomes, config):
+        for genome_id, genome in genomes:
+            genome.fitness = 0.0
+            net = neat.nn.RecurrentNetwork.create(genome, config)
+            predictions = [net.activate(xi) for xi in self.train_x]
+            confusion_mat = sklearn.metrics.confusion_matrix(self.train_y, np.argmax(predictions, axis=1),
+                                                        labels=range(len(list(dict.fromkeys(y_train)))), normalize='true')
+            genome.fitness = np.mean(np.diagonal(confusion_mat))
 
 
 def run(config, test_x, test_y, fitness,
@@ -96,7 +104,7 @@ def run(config, test_x, test_y, fitness,
                                              filename_prefix=filename_prefix))
 
         # Run for up to 1000 generations.
-        winner = p.run(fitness.eval_genomes, generations)
+        winner = p.run(fitness.eval_conf_diag, generations)
     else:
         print(
             '\n=================================== Return to ' + return_check + ' ===================================\n')
@@ -110,11 +118,11 @@ def run(config, test_x, test_y, fitness,
             p.add_reporter(neat.Checkpointer(generation_interval,
                                              filename_prefix=filename_prefix))
         if run_again:
-            winner = p.run(fitness.eval_genomes, generations)
+            winner = p.run(fitness.eval_conf_diag, generations)
         else:
             print('\n             ====================           ' + str(
                 generations - last_generation) + ' generations  to go      ====================      \n')
-            winner = p.run(fitness.eval_genomes, generations - last_generation)
+            winner = p.run(fitness.eval_conf_diag, generations - last_generation)
 
     # Display the winning genome.
     print('===================================' * 3)
@@ -145,66 +153,3 @@ def run(config, test_x, test_y, fitness,
     visualize.plot_species(stats, view=view, filename=filename_spec + '.svg', save=save)
 
     return winner, prediction, stats
-
-
-
-
-'''
-import Neuroevo as ne
-v_winner, v_true, v_pred, v_score = ne.bring_NEAT_model('NEAT/config-recurrent', 'NEAT/Voice/Winners/relu_winner.plk', 'relu', ne.bring_voice_data)
-
-import sklearn
-sklearn.metrics.confusion_matrix(v_true, v_pred,labels=list(range(3)), normalize='true')'''
-
-''' Division de datos
-import pandas as pd
-import numpy as np
-from sklearn.preprocessing import StandardScaler
-
-data = np.array(pd.read_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/caracteristicas_1s_tc.csv'))
-from sklearn.model_selection import StratifiedShuffleSplit
-sss = StratifiedShuffleSplit(n_splits = 1, test_size =0.3, random_state=1)
-y = data[:,-1]
-X = data[:,:-1]
-
-scaler = StandardScaler(with_mean=True, with_std=False)
-scaler.fit(X)
-X = scaler.transform(X)
-
-for train_index, test_index in sss.split(X, y):
-    X_train, X_test = X[train_index], X[test_index]
-    y_train, y_test = y[train_index], y[test_index]
-    
-pd.DataFrame(X_train).to_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/X_train.csv', index_label=False)
-pd.DataFrame(X_test).to_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/X_test.csv', index_label=False)
-pd.DataFrame(y_test).to_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/y_test.csv', index_label=False)
-pd.DataFrame(y_train).to_csv('C:/Users/andre/Documents/pythonProject/Neuroevo_Ansiedad/y_train.csv', index_label=False)
-
-'''
-
-'''
-import pandas as pd
-import numpy as np
-import data_process as dp
-X_train,X_test,y_train,y_test = dp.charge_splited()
-
-import Neuroevo as ne
-
-base = 'NEAT'
-scores = ne.files_tour(X_train,X_test,y_train.T[0],y_test.T[0],base, feats=None, targets=None, ret_check=0)'''
-
-'''import pandas as pd
-import numpy as np
-import data_process as dp
-X_train,X_test,y_train,y_test = dp.charge_splited()
-import Neuroevo as ne
-base = 'NEAT'
-vary1=ne.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'NEAT/config-recurrent', 'NEAT/Winners - 1000g/vary_winner.plk', 'vary',
-                     act_functions = ['relu','sigmoid','tanh','vary'])
-vary=ne.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'NEAT/config-recurrent', 'NEAT/Winners/vary_winner.plk', 'vary',
-                     act_functions = ['relu','sigmoid','tanh','vary'])
-tanh=ne.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'NEAT/config-recurrent', 'NEAT/Winners/tanh_winner.plk', 'tanh',
-                     act_functions = ['relu','sigmoid','tanh','vary'])
-sigmoid=ne.bring_NEAT_model(X_train,X_test,y_train.T[0],y_test.T[0], 'NEAT/config-recurrent', 'NEAT/Winners/sigmoid_winner.plk', 'sigmoid',
-                     act_functions = ['relu','sigmoid','tanh','vary'])
-'''
