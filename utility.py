@@ -87,7 +87,7 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
     :param rerun: (Boolean) If True it will ignore if alredy exist a winner for all the activation functions between the options
     :return: A Dataframe containing the results obtained"""
     
-    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa','c_matrix']}
+    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa']}
     act_functions = ['relu', 'sigmoid', 'tanh', 'vary']
     save_im = 'Images'
     save_ch = 'Check'
@@ -188,9 +188,9 @@ def bring_NEAT_model(X_train, X_test, y_train, y_test, config_path, model_path, 
     scores = {}
     pred_targets = np.argmax(prediction, axis=1)
     scores['accuracy'] = sklearn.metrics.accuracy_score(y_test, pred_targets)
-    scores['recall'] = sklearn.metrics.recall_score(y_test, pred_targets, labels=range(3), average='weighted')
-    scores['f1_score'] = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(3), average='weighted')
-    scores['precision'] = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(3), average='weighted')
-    scores['kappa'] = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(3))
-    scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(3), normalize='true')
+    scores['recall'] = sklearn.metrics.recall_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
+    scores['f1_score'] = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
+    scores['precision'] = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
+    scores['kappa'] = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(n_targets))
+    scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(n_targets), normalize='true')
     return winner_net, y_test, pred_targets, scores
