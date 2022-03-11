@@ -12,6 +12,13 @@ from random import randint
 '####### Neuroevolutive algorithm ######'
 
 class fitness_func(object):
+    '''
+    :param train_x or train_y: (array) Data to train and test
+    :param fitness_metric: (function) Function to compute the fitness level, it has to recive two vector parameters, targets and predictions in that order.
+    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of tree positions = [n_splits, random_state, shufle]
+                It use the function "sklearn.model_selection.StratifiedKFold()"
+    :return: (Object) This object contains the functions plus the data needed to compute fitness function necessary for the neat algorithm.
+    '''
     def __init__(self, train_x, train_y, fit_metric, CV=None):
         self.train_x, self.train_y = train_x, train_y
         self.metric = fit_metric
@@ -22,16 +29,19 @@ class fitness_func(object):
             self.method = lambda genomes, config: self.eval_fitness(genomes, config, range(0,len(train_y)))
 
     def eval_fitness(self, genomes, config, train_index):
+        '''Apply the metric passed to all the genomes and compute each fitness'''
         for genome_id, genome in genomes:
             net = neat.nn.RecurrentNetwork.create(genome, config)
             predictions = [net.activate(x) for x in self.train_x[train_index]]
             genome.fitness = self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
 
     def cross_val(self, n_splits, random_state, shufle):
+        '''Apply the StratifiedKFold from sklearn and create a new attribute with those folders'''
         skf = sklearn.model_selection.StratifiedKFold(n_splits=n_splits, random_state=random_state, shuffle=shufle)
         self.skf = list(skf.split(self.train_x, self.train_y)) #[(train_index, test_index), ...]
 
     def fitness(self, genome, config):
+        '''Compute the fitness function'''
         self.method(genome, config)
 
 
