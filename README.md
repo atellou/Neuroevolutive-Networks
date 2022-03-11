@@ -13,7 +13,7 @@ Some results example case 2:
 Terminal:
 ----------------------
 ```
-$ python3 main() 2
+$ python3 path\main.py 2
 ```
 
 Results:
