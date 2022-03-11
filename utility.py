@@ -82,7 +82,7 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
     :param base: (Str) Folder that contains all the hierarchy necessary to this example function
     :param generations: (int) How many generation to run
     :param fitness_metric: (function) Function to compute the fitness level, it has to recive two vector parameters, targets and predictions in that order.
-    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of tree positions = [n_splits, random_state, shufle]
+    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of three positions = [n_splits, random_state, shufle]
                 It use the function "sklearn.model_selection.StratifiedKFold()"
     :param ret_checks: (Boolean) If True returns to the most recent checkpoint, otherwise start from cero
     :param replay: (Str or None) If type == Str and == to the activation_function then despite exist a winner,

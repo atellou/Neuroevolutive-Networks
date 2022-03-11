@@ -15,7 +15,7 @@ class fitness_func(object):
     '''
     :param train_x or train_y: (array) Data to train and test
     :param fitness_metric: (function) Function to compute the fitness level, it has to recive two vector parameters, targets and predictions in that order.
-    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of tree positions = [n_splits, random_state, shufle]
+    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of three positions = [n_splits, random_state, shufle]
                 It use the function "sklearn.model_selection.StratifiedKFold()"
     :return: (Object) This object contains the functions plus the data needed to compute fitness function necessary for the neat algorithm.
     '''

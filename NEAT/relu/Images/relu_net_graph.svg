@@ -11,20 +11,44 @@
 <!-- sepal length (cm) -->
 <g id="node1" class="node">
 <title>sepal length (cm)</title>
-<polygon fill="lightgray" stroke="black" points="268.5,-127.54 190.5,-127.54 190.5,-109.54 268.5,-109.54 268.5,-127.54"/>
-<text text-anchor="middle" x="229.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">sepal length (cm)</text>
+<polygon fill="lightgray" stroke="black" points="173.5,-127.54 95.5,-127.54 95.5,-109.54 173.5,-109.54 173.5,-127.54"/>
+<text text-anchor="middle" x="134.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">sepal length (cm)</text>
+</g>
+<!-- setosa -->
+<g id="node5" class="node">
+<title>setosa</title>
+<ellipse fill="lightblue" stroke="black" cx="183.5" cy="-36.77" rx="27.65" ry="27.65"/>
+<text text-anchor="middle" x="183.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">setosa</text>
+</g>
+<!-- sepal length (cm)&#45;&gt;setosa -->
+<g id="edge8" class="edge">
+<title>sepal length (cm)&#45;&gt;setosa</title>
+<path fill="none" stroke="red" stroke-width="0.33" stroke-dasharray="1,5" d="M139.56,-109.3C145.35,-99.87 155.19,-83.86 164.09,-69.37"/>
+<polygon fill="red" stroke="red" stroke-width="0.33" points="167.21,-70.98 169.46,-60.62 161.25,-67.31 167.21,-70.98"/>
 </g>
 <!-- versicolor -->
 <g id="node6" class="node">
 <title>versicolor</title>
-<ellipse fill="lightblue" stroke="black" cx="159.5" cy="-36.77" rx="36.54" ry="36.54"/>
-<text text-anchor="middle" x="159.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">versicolor</text>
+<ellipse fill="lightblue" stroke="black" cx="101.5" cy="-36.77" rx="36.54" ry="36.54"/>
+<text text-anchor="middle" x="101.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">versicolor</text>
 </g>
 <!-- sepal length (cm)&#45;&gt;versicolor -->
-<g id="edge1" class="edge">
+<g id="edge3" class="edge">
 <title>sepal length (cm)&#45;&gt;versicolor</title>
-<path fill="none" stroke="green" stroke-width="0.4" stroke-dasharray="1,5" d="M222.27,-109.3C214.68,-100.65 202.22,-86.45 190.4,-72.98"/>
-<polygon fill="green" stroke="green" stroke-width="0.4" points="192.78,-70.38 183.55,-65.18 187.52,-75 192.78,-70.38"/>
+<path fill="none" stroke="red" stroke-width="0.22" stroke-dasharray="1,5" d="M131.09,-109.3C128.16,-102.21 123.69,-91.4 119.1,-80.31"/>
+<polygon fill="red" stroke="red" stroke-width="0.22" points="122.31,-78.91 115.25,-71 115.84,-81.58 122.31,-78.91"/>
+</g>
+<!-- virginica -->
+<g id="node7" class="node">
+<title>virginica</title>
+<ellipse fill="lightblue" stroke="black" cx="262.5" cy="-36.77" rx="33.47" ry="33.47"/>
+<text text-anchor="middle" x="262.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">virginica</text>
+</g>
+<!-- sepal length (cm)&#45;&gt;virginica -->
+<g id="edge5" class="edge">
+<title>sepal length (cm)&#45;&gt;virginica</title>
+<path fill="none" stroke="red" stroke-width="0.11" stroke-dasharray="1,5" d="M153.32,-109.45C171.22,-101.4 198.61,-88.17 220.5,-73.54 223.81,-71.33 227.15,-68.89 230.43,-66.36"/>
+<polygon fill="red" stroke="red" stroke-width="0.11" points="232.79,-68.95 238.38,-59.95 228.4,-63.5 232.79,-68.95"/>
 </g>
 <!-- sepal width (cm) -->
 <g id="node2" class="node">
@@ -32,23 +56,17 @@
 <polygon fill="lightgray" stroke="black" points="77,-127.54 0,-127.54 0,-109.54 77,-109.54 77,-127.54"/>
 <text text-anchor="middle" x="38.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">sepal width (cm)</text>
 </g>
-<!-- setosa -->
-<g id="node5" class="node">
-<title>setosa</title>
-<ellipse fill="lightblue" stroke="black" cx="71.5" cy="-36.77" rx="27.65" ry="27.65"/>
-<text text-anchor="middle" x="71.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">setosa</text>
-</g>
 <!-- sepal width (cm)&#45;&gt;setosa -->
-<g id="edge6" class="edge">
+<g id="edge10" class="edge">
 <title>sepal width (cm)&#45;&gt;setosa</title>
-<path fill="none" stroke="green" stroke-width="0.35" d="M41.91,-109.3C45.57,-100.44 51.65,-85.76 57.34,-72"/>
-<polygon fill="green" stroke="green" stroke-width="0.35" points="60.6,-73.28 61.19,-62.7 54.13,-70.6 60.6,-73.28"/>
+<path fill="none" stroke="green" stroke-width="0.15" d="M66.87,-109.53C89.79,-102.27 122.29,-90.16 147.5,-73.54 151.24,-71.07 154.92,-68.17 158.41,-65.11"/>
+<polygon fill="green" stroke="green" stroke-width="0.15" points="160.81,-67.65 165.7,-58.25 156.02,-62.55 160.81,-67.65"/>
 </g>
 <!-- sepal width (cm)&#45;&gt;versicolor -->
-<g id="edge8" class="edge">
+<g id="edge9" class="edge">
 <title>sepal width (cm)&#45;&gt;versicolor</title>
-<path fill="none" stroke="green" stroke-width="0.16" stroke-dasharray="1,5" d="M51.79,-109.46C65.96,-100.78 89.01,-86.49 108.5,-73.54 112.78,-70.69 117.23,-67.67 121.64,-64.64"/>
-<polygon fill="green" stroke="green" stroke-width="0.16" points="123.79,-67.41 130.01,-58.83 119.8,-61.66 123.79,-67.41"/>
+<path fill="none" stroke="red" stroke-width="0.33" stroke-dasharray="1,5" d="M45,-109.3C51.62,-100.93 62.33,-87.36 72.66,-74.28"/>
+<polygon fill="red" stroke="red" stroke-width="0.33" points="75.55,-76.27 79,-66.25 70.06,-71.93 75.55,-76.27"/>
 </g>
 <!-- petal length (cm) -->
 <g id="node3" class="node">
@@ -56,47 +74,41 @@
 <polygon fill="lightgray" stroke="black" points="364,-127.54 287,-127.54 287,-109.54 364,-109.54 364,-127.54"/>
 <text text-anchor="middle" x="325.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">petal length (cm)</text>
 </g>
-<!-- petal length (cm)&#45;&gt;versicolor -->
-<g id="edge3" class="edge">
-<title>petal length (cm)&#45;&gt;versicolor</title>
-<path fill="none" stroke="green" stroke-width="0.31" d="M308.67,-109.45C283.81,-97.5 236.46,-74.75 201.76,-58.08"/>
-<polygon fill="green" stroke="green" stroke-width="0.31" points="202.86,-54.72 192.33,-53.55 199.83,-61.03 202.86,-54.72"/>
-</g>
-<!-- virginica -->
-<g id="node7" class="node">
-<title>virginica</title>
-<ellipse fill="lightblue" stroke="black" cx="299.5" cy="-36.77" rx="33.47" ry="33.47"/>
-<text text-anchor="middle" x="299.5" y="-34.57" font-family="Times New Roman,serif" font-size="9.00">virginica</text>
+<!-- petal length (cm)&#45;&gt;setosa -->
+<g id="edge7" class="edge">
+<title>petal length (cm)&#45;&gt;setosa</title>
+<path fill="none" stroke="red" stroke-width="0.19" stroke-dasharray="1,5" d="M298.69,-109.4C276.63,-101.99 245.09,-89.74 220.5,-73.54 216.62,-70.98 212.79,-67.99 209.14,-64.84"/>
+<polygon fill="red" stroke="red" stroke-width="0.19" points="211.25,-62.02 201.53,-57.8 206.5,-67.16 211.25,-62.02"/>
 </g>
 <!-- petal length (cm)&#45;&gt;virginica -->
-<g id="edge7" class="edge">
+<g id="edge1" class="edge">
 <title>petal length (cm)&#45;&gt;virginica</title>
-<path fill="none" stroke="green" stroke-width="0.16" d="M322.82,-109.3C320.38,-101.84 316.6,-90.25 312.79,-78.55"/>
-<polygon fill="green" stroke="green" stroke-width="0.16" points="316.04,-77.22 309.61,-68.8 309.38,-79.39 316.04,-77.22"/>
+<path fill="none" stroke="green" stroke-width="0.15" stroke-dasharray="1,5" d="M319,-109.3C311.9,-100.32 300.08,-85.35 289.08,-71.43"/>
+<polygon fill="green" stroke="green" stroke-width="0.15" points="291.69,-69.08 282.74,-63.4 286.19,-73.42 291.69,-69.08"/>
 </g>
 <!-- petal width (cm) -->
 <g id="node4" class="node">
 <title>petal width (cm)</title>
-<polygon fill="lightgray" stroke="black" points="172,-127.54 95,-127.54 95,-109.54 172,-109.54 172,-127.54"/>
-<text text-anchor="middle" x="133.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">petal width (cm)</text>
+<polygon fill="lightgray" stroke="black" points="269,-127.54 192,-127.54 192,-109.54 269,-109.54 269,-127.54"/>
+<text text-anchor="middle" x="230.5" y="-116.34" font-family="Times New Roman,serif" font-size="9.00">petal width (cm)</text>
 </g>
 <!-- petal width (cm)&#45;&gt;setosa -->
 <g id="edge4" class="edge">
 <title>petal width (cm)&#45;&gt;setosa</title>
-<path fill="none" stroke="red" stroke-width="0.35" d="M127.1,-109.3C119.37,-99.36 105.95,-82.1 94.24,-67.02"/>
-<polygon fill="red" stroke="red" stroke-width="0.35" points="96.85,-64.68 87.95,-58.93 91.32,-68.97 96.85,-64.68"/>
+<path fill="none" stroke="red" stroke-width="0.15" d="M225.65,-109.3C220.13,-99.94 210.79,-84.09 202.3,-69.68"/>
+<polygon fill="red" stroke="red" stroke-width="0.15" points="205.26,-67.81 197.17,-60.97 199.23,-71.36 205.26,-67.81"/>
 </g>
 <!-- petal width (cm)&#45;&gt;versicolor -->
-<g id="edge5" class="edge">
+<g id="edge2" class="edge">
 <title>petal width (cm)&#45;&gt;versicolor</title>
-<path fill="none" stroke="green" stroke-width="0.66" stroke-dasharray="1,5" d="M136.18,-109.3C138.39,-102.54 141.7,-92.38 145.14,-81.83"/>
-<polygon fill="green" stroke="green" stroke-width="0.66" points="148.53,-82.71 148.31,-72.11 141.88,-80.54 148.53,-82.71"/>
+<path fill="none" stroke="green" stroke-width="0.2" d="M212.91,-109.53C195.53,-101.33 168.44,-87.82 146.5,-73.54 143.57,-71.63 140.59,-69.57 137.65,-67.44"/>
+<polygon fill="green" stroke="green" stroke-width="0.2" points="139.56,-64.51 129.46,-61.32 135.37,-70.11 139.56,-64.51"/>
 </g>
 <!-- petal width (cm)&#45;&gt;virginica -->
-<g id="edge2" class="edge">
+<g id="edge6" class="edge">
 <title>petal width (cm)&#45;&gt;virginica</title>
-<path fill="none" stroke="green" stroke-width="0.7" d="M150.33,-109.45C175.95,-97.14 225.43,-73.37 260.36,-56.58"/>
-<polygon fill="green" stroke="green" stroke-width="0.7" points="262.3,-59.53 269.8,-52.04 259.27,-53.22 262.3,-59.53"/>
+<path fill="none" stroke="green" stroke-width="0.27" d="M233.8,-109.3C236.88,-101.64 241.7,-89.62 246.52,-77.61"/>
+<polygon fill="green" stroke="green" stroke-width="0.27" points="249.87,-78.65 250.35,-68.07 243.37,-76.04 249.87,-78.65"/>
 </g>
 </g>
 </svg>
