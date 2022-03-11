@@ -8,28 +8,31 @@ import pickle
 import neat
 import uuid
 import os
+from random import randint
 '####### Neuroevolutive algorithm ######'
 
 class fitness_func(object):
-    def __init__(self, train_x, train_y):
+    def __init__(self, train_x, train_y, fit_metric, CV=None):
         self.train_x, self.train_y = train_x, train_y
+        self.metric = fit_metric
+        if CV!=None:
+            self.cross_val(CV[0],CV[1],CV[2])
+            self.method = lambda genomes, config: self.eval_fitness(genomes, config, self.skf[randint(0,CV[0]-1)][0])
+        else:
+            self.method = lambda genomes, config: self.eval_fitness(genomes, config, range(0,len(train_y)))
 
-    def eval_f1(self, genomes, config):
+    def eval_fitness(self, genomes, config, train_index):
         for genome_id, genome in genomes:
-            genome.fitness = 0.0
             net = neat.nn.RecurrentNetwork.create(genome, config)
-            predictions = [net.activate(xi) for xi in self.train_x]
-            genome.fitness = sklearn.metrics.f1_score(self.train_y, np.argmax(predictions, axis=1),
-                                                      labels=range(len(list(dict.fromkeys(self.train_y)))),
-                                                      average='weighted')
-    def eval_conf_diag(self, genomes, config):
-        for genome_id, genome in genomes:
-            genome.fitness = 0.0
-            net = neat.nn.RecurrentNetwork.create(genome, config)
-            predictions = [net.activate(xi) for xi in self.train_x]
-            confusion_mat = sklearn.metrics.confusion_matrix(self.train_y, np.argmax(predictions, axis=1),
-                                                        labels=range(len(list(dict.fromkeys(self.train_y)))), normalize='true')
-            genome.fitness = np.mean(np.diagonal(confusion_mat))
+            predictions = [net.activate(x) for x in self.train_x[train_index]]
+            genome.fitness = self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
+
+    def cross_val(self, n_splits, random_state, shufle):
+        skf = sklearn.model_selection.StratifiedKFold(n_splits=n_splits, random_state=random_state, shuffle=shufle)
+        self.skf = list(skf.split(self.train_x, self.train_y)) #[(train_index, test_index), ...]
+
+    def fitness(self, genome, config):
+        self.method(genome, config)
 
 
 def run(config, test_x, test_y, fitness,
@@ -104,7 +107,7 @@ def run(config, test_x, test_y, fitness,
                                              filename_prefix=filename_prefix))
 
         # Run for up to 1000 generations.
-        winner = p.run(fitness.eval_conf_diag, generations)
+        winner = p.run(fitness.fitness, generations)
     else:
         print(
             '\n=================================== Return to ' + return_check + ' ===================================\n')
@@ -118,11 +121,11 @@ def run(config, test_x, test_y, fitness,
             p.add_reporter(neat.Checkpointer(generation_interval,
                                              filename_prefix=filename_prefix))
         if run_again:
-            winner = p.run(fitness.eval_conf_diag, generations)
+            winner = p.run(fitness.fitness, generations)
         else:
             print('\n             ====================           ' + str(
                 generations - last_generation) + ' generations  to go      ====================      \n')
-            winner = p.run(fitness.eval_conf_diag, generations - last_generation)
+            winner = p.run(fitness.fitness, generations - last_generation)
 
     # Display the winning genome.
     print('===================================' * 3)

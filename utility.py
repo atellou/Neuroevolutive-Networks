@@ -73,7 +73,7 @@ def modify_config(config, activation_def, fitnes_th, n_inputs, n_outputs, activa
     return config
 
 
-def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name, feats=[], targets=[], ret_check=1, replay=None, rerun=0):
+def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,fitness_metric, CV=None, feats=[], targets=[], ret_check=1, replay=None, rerun=0):
     """
     :param X_... or y_...: (array) Data to train and test
     :param base: Path to save all
@@ -81,6 +81,9 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
     :param targets: (array) Target names
     :param base: (Str) Folder that contains all the hierarchy necessary to this example function
     :param generations: (int) How many generation to run
+    :param fitness_metric: (function) Function to compute the fitness level, it has to recive two vector parameters, targets and predictions in that order.
+    :param CV: (Vector) If passed, then kind of cross_validation will be performed, it has to be a vector of tree positions = [n_splits, random_state, shufle]
+                It use the function "sklearn.model_selection.StratifiedKFold()"
     :param ret_checks: (Boolean) If True returns to the most recent checkpoint, otherwise start from cero
     :param replay: (Str or None) If type == Str and == to the activation_function then despite exist a winner,
     It will run again.
@@ -124,8 +127,8 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
                   '\nfilename_spec=', os.path.join(base, act, save_im, act + '_speciation.svg'),
                   '\nfilename_net=', os.path.join(base, act, save_im, act + '_net_graph'),
                   '\nfilename_best=', os.path.join(win_path, act + '_winner'))
-            fitness = fitness_func(X_train,
-                                   y_train)  # create the object to store the train data and pass the fitness function
+            fitness = fitness_func(X_train,y_train,
+                                    fitness_metric, CV)  # create the object to store the train data and pass the fitness function
             winner, predictions, stats = run(config,
                                              X_test, y_test, fitness,
                                              generations=generations,

@@ -8,8 +8,17 @@ import os
 import sklearn.metrics
 from sklearn.datasets import load_iris
 from sklearn.model_selection import StratifiedShuffleSplit
+# GLOBAL VARIABLES
+global f1,CV
+# Example of metric to use
+f1 = lambda targets, predictions: sklearn.metrics.f1_score(targets, predictions,
+                                                      labels=range(len(list(dict.fromkeys(targets)))),
+                                                      average='weighted')
+# Parameters to Stratified K Fold
+CV = [5, 1, True] #n_splits, random_state, shufle                                                   
 
 def one_run():
+    global f1,CV
     """Create and view only one model without save anything"""
     act= 'vary'
     base = 'NEAT'
@@ -28,8 +37,8 @@ def one_run():
     else:
         config = ut.modify_config(os.path.join(base, config_name),  # crate the config file
                                 activation_def=act, fitnes_th=1, n_inputs=col, n_outputs=n_targets)
-    fitness = ne.fitness_func(X_train,
-                            y_train)  # create the object to store the train data and pass the fitness function
+    fitness = ne.fitness_func(X_train,y_train,
+                                    f1, CV)  # create the object to store the train data and pass the fitness function
     winner, predictions, stats = ne.run(config,
                                     X_test, y_test, fitness,
                                     generations=10,
@@ -47,6 +56,7 @@ def one_run():
 
 
 def new_evolution(): #Example case 2
+    global f1,CV
     """This will run from zero all the process for more than one option of activation function. The directory that is used in this example 
     from the function files_tour was organized as following: 
                                                     -NEAT:
@@ -79,7 +89,7 @@ def new_evolution(): #Example case 2
     global X_train, X_test, y_train, y_test, feature_names, target_names
     base = 'NEAT'
     config_name = 'config-recurrent'
-    scores = ut.files_tour(X_train,X_test,y_train,y_test,base, 10, config_name,
+    scores = ut.files_tour(X_train,X_test,y_train,y_test,base, 10, config_name, f1, CV,
                             feats=feature_names, targets=target_names, ret_check=0, replay='relu', rerun=1)
 
 
