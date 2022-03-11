@@ -2,7 +2,7 @@
 
 import pandas as pd
 import numpy as np
-import sklearn
+from sklearn import model_selection
 import visualize
 import pickle   
 import neat
@@ -37,7 +37,7 @@ class fitness_func(object):
 
     def cross_val(self, n_splits, random_state, shufle):
         '''Apply the StratifiedKFold from sklearn and create a new attribute with those folders'''
-        skf = sklearn.model_selection.StratifiedKFold(n_splits=n_splits, random_state=random_state, shuffle=shufle)
+        skf = model_selection.StratifiedKFold(n_splits=n_splits, random_state=random_state, shuffle=shufle)
         self.skf = list(skf.split(self.train_x, self.train_y)) #[(train_index, test_index), ...]
 
     def fitness(self, genome, config):
@@ -46,7 +46,7 @@ class fitness_func(object):
 
 
 def run(config, test_x, test_y, fitness,
-        generations=1000, generation_interval=600,
+        generations=1000, check_interval=500, check_time=2700,
         filename_prefix='./neat-checkpoint-',
         filename_fitness='./avg_fitness', filename_spec='./speciation',
         filename_net='./net_graph', filename_best='./better',
@@ -60,7 +60,8 @@ def run(config, test_x, test_y, fitness,
     :param test_y: (np.array) Labels for test set
     :param fitness: (Object) Object with Train data and fitness function
     :param generations: (int) How many generation to run
-    :param generation_interval: (int) Interval in seconds to create a chack point
+    :param check_interval: (int) Interval in generation to create a check point
+    :param check_time: (int) Interval in seconds to create a check point
     :param filename_prefix: (Str) Path to save the check points
     :param filename_fitness: (Str) Path to save the fitness progration, save an image
     :param filename_spec: (Str) Path to save an image with the changes in the population
@@ -68,13 +69,14 @@ def run(config, test_x, test_y, fitness,
     :param filename_best: (Str) Path to save the winner
     :param run_again: (Boolean) If a check point was given, if False only the remaining generation to complete "generation"
     will run, if True, it computes all the "generations" specified
-    :param return_check: (Str or None) If None, the process starts from zero, otherwise, the path specified is taken as
-    the check point to start with
+    :param return_check: (None, str or neat.population object)  If None, the process starts from zero. If str, the path specified is taken as
+    the checkpoint to start with. If neat object it will use it to run generations, recall that only stats reporter will be added if not exist
     :param verbose: (Boolean) To have a feedback of the process
     :param view:  (Boolean) If plot the graphs
     :param save_check: (Boolean) If make check points
     :param save: (Boolean) If save the images
-    :param save_best: (Boolean) If save the winner
+    :param save_best: (Boolean) If save the winner, also will save the last population with the filename_prefix as the path.
+                    The last population will stand out from others due to being a .plk file, to use it is necessary to open it.
     :param feats: Vector Strings with feats names to plot the Neural network
     :param targets: Vector Strings of target names to plot the Neural network
     :return: The winner, the predictions made for Test set, and group of stats given by NEAT
@@ -104,38 +106,47 @@ def run(config, test_x, test_y, fitness,
                              config)
 
     if return_check == None:
+        print('Initialing the population')
         # Create the population, which is the top-level object for a NEAT run.
         p = neat.Population(config)
 
+    elif type(return_check)==str:
+        print('\n=======> Return to ' + return_check + '.\n')
+        last_generation = int(return_check.split('-')[-1])
+        p = neat.Checkpointer.restore_checkpoint(return_check)
+    
+         # Run for up to generations.
+        if not(run_again):
+            generations = generations - last_generation
+        print('\n=======>' + str(generations)+ ' generations  to go.\n')
+
+    else:
+        assert type(return_check)==neat.population.Population, 'The return check has to be a Str, None o Population object from NEAT'
+        print('Population passed, take into account that the reporter stat if not exist, will be added')
+        # Create the population, which is the top-level object for a NEAT run.
+        p = neat.Population(config)
+
+    # Add reporters
+    stats=''
+    if len(p.reporters.reporters)==0:
         # Add a stdout reporter to show progress in the terminal.
         if verbose:
             p.add_reporter(neat.StdOutReporter(verbose))
-        stats = neat.StatisticsReporter()
-        p.add_reporter(stats)
         if save_check:
-            p.add_reporter(neat.Checkpointer(generation_interval,
-                                             filename_prefix=filename_prefix))
-
-        # Run for up to 1000 generations.
-        winner = p.run(fitness.fitness, generations)
+            p.add_reporter(neat.Checkpointer(check_interval,check_time,
+                                                filename_prefix=filename_prefix))
     else:
-        print(
-            '\n=================================== Return to ' + return_check + ' ===================================\n')
-        last_generation = int(return_check.split('-')[-1])
-        p = neat.Checkpointer.restore_checkpoint(return_check)
-        if verbose:
-            p.add_reporter(neat.StdOutReporter(verbose))
+        for ty in p.reporters.reporters:
+            if type(ty) == neat.statistics.StatisticsReporter:
+                stats = ty
+                break
+    if stats=='':
         stats = neat.StatisticsReporter()
         p.add_reporter(stats)
-        if save_check:
-            p.add_reporter(neat.Checkpointer(generation_interval,
-                                             filename_prefix=filename_prefix))
-        if run_again:
-            winner = p.run(fitness.fitness, generations)
-        else:
-            print('\n             ====================           ' + str(
-                generations - last_generation) + ' generations  to go      ====================      \n')
-            winner = p.run(fitness.fitness, generations - last_generation)
+
+    # Run for up to generations.
+    winner = p.run(fitness.fitness, generations)
+    
 
     # Display the winning genome.
     print('===================================' * 3)
@@ -148,6 +159,9 @@ def run(config, test_x, test_y, fitness,
     if save_best:
         with open(filename_best + '.plk', "wb") as f:
             pickle.dump(winner, f)
+            f.close()
+        with open(filename_prefix +str(generations-1) + '.plk', "wb") as f:
+            pickle.dump(p, f)
             f.close()
     node_names = crate_nodes(feats, targets, test_x, test_y)
     if not (save):
