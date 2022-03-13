@@ -21,6 +21,7 @@ class fitness_func(object):
     '''
     def __init__(self, train_x, train_y, fit_metric, CV=None):
         self.train_x, self.train_y = train_x, train_y
+        self.sub_metric=fit_metric
         if CV!=None:
             self.cross_val(CV[0],CV[1],CV[2])
             self.metric = self.cross_val_compute
@@ -30,14 +31,16 @@ class fitness_func(object):
             self.method = lambda genomes, config: self.eval_fitness(genomes, config, range(0,len(train_y)))
     
     def cross_val_compute(self, genome_fit, train_index, predictions):
+        '''For the cross-validation an average with the result of the past generation is made, this will reduce the possibility of the
+        generation of loops caused by the increase and decrease between folders.'''
         try:
-            genome_fit = np.mean([genome_fit,self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))])
+            genome_fit = np.mean([genome_fit,self.sub_metric(self.train_y[train_index], np.argmax(predictions, axis=1))])
         except TypeError:
-            genome_fit = self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
+            genome_fit = self.sub_metric(self.train_y[train_index], np.argmax(predictions, axis=1))
         return genome_fit
     
     def simple_val_compute(self, genome_fit, train_index, predictions):
-        return self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
+        return self.sub_metric(self.train_y[train_index], np.argmax(predictions, axis=1))
 
     def eval_fitness(self, genomes, config, train_index):
         '''Apply the metric passed to all the genomes and compute each fitness'''
