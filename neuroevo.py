@@ -21,19 +21,30 @@ class fitness_func(object):
     '''
     def __init__(self, train_x, train_y, fit_metric, CV=None):
         self.train_x, self.train_y = train_x, train_y
-        self.metric = fit_metric
         if CV!=None:
             self.cross_val(CV[0],CV[1],CV[2])
+            self.metric = self.cross_val_compute
             self.method = lambda genomes, config: self.eval_fitness(genomes, config, self.skf[randint(0,CV[0]-1)][0])
         else:
+            self.metric = self.simple_val_compute
             self.method = lambda genomes, config: self.eval_fitness(genomes, config, range(0,len(train_y)))
+    
+    def cross_val_compute(self, genome_fit, train_index, predictions):
+        try:
+            genome_fit = np.mean([genome_fit,self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))])
+        except TypeError:
+            genome_fit = self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
+        return genome_fit
+    
+    def simple_val_compute(self, genome_fit, train_index, predictions):
+        return self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
 
     def eval_fitness(self, genomes, config, train_index):
         '''Apply the metric passed to all the genomes and compute each fitness'''
         for genome_id, genome in genomes:
             net = neat.nn.RecurrentNetwork.create(genome, config)
             predictions = [net.activate(x) for x in self.train_x[train_index]]
-            genome.fitness = self.metric(self.train_y[train_index], np.argmax(predictions, axis=1))
+            genome.fitness = self.metric(genome.fitness, train_index, predictions)
 
     def cross_val(self, n_splits, random_state, shufle):
         '''Apply the StratifiedKFold from sklearn and create a new attribute with those folders'''
@@ -122,9 +133,9 @@ def run(config, test_x, test_y, fitness,
 
     else:
         assert type(return_check)==neat.population.Population, 'The return check has to be a Str, None o Population object from NEAT'
-        print('Population passed, take into account that the reporter stat if not exist, will be added')
+        print('Population passed, take into account that the reporter stat if not exist, will be added.')
         # Create the population, which is the top-level object for a NEAT run.
-        p = neat.Population(config)
+        p = return_check
 
     # Add reporters
     stats=''
@@ -136,6 +147,7 @@ def run(config, test_x, test_y, fitness,
             p.add_reporter(neat.Checkpointer(check_interval,check_time,
                                                 filename_prefix=filename_prefix))
     else:
+
         for ty in p.reporters.reporters:
             if type(ty) == neat.statistics.StatisticsReporter:
                 stats = ty
