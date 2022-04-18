@@ -73,7 +73,8 @@ def modify_config(config, activation_def, fitnes_th, n_inputs, n_outputs, activa
     return config
 
 
-def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,fitness_metric, CV=None, feats=[], targets=[], ret_check=1, replay=None, rerun=0):
+def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,fitness_metric,
+    CV=None, feats=[], targets=[], ret_check=1, replay=None, rerun=0, verbose=0, view=0):
     """
     :param X_... or y_...: (array) Data to train and test
     :param base: Path to save all
@@ -90,7 +91,7 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
     :param rerun: (Boolean) If True it will ignore if alredy exist a winner for all the activation functions between the options
     :return: A Dataframe containing the results obtained"""
     
-    scores = {'columns': ['fitness', 'f1_score', 'recall', 'presicion', 'kappa']}
+    scores = {'columns': ['fitness', 'accuracy', 'f1_score', 'recall', 'presicion', 'kappa']}
     act_functions = ['relu', 'sigmoid', 'tanh', 'vary']
     save_im = 'Images'
     save_ch = 'Check'
@@ -140,16 +141,17 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
                                              filename_best=os.path.join(win_path, act + '_winner'),
                                              return_check=return_check,
                                              save_check=1, save=1, save_best=1,
-                                             verbose=1, view=1, feats=feats, targets=targets)
+                                             verbose=verbose, view=view, feats=feats, targets=targets)
             pred_targets = np.argmax(predictions, axis=1)
+            accuracy = sklearn.metrics.accuracy_score(y_test, pred_targets)
             recall = sklearn.metrics.recall_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
             f1_score = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
             presicion = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(n_targets),
                                                         average='weighted')
             kappa = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(n_targets))
-            scores[act] = [winner.fitness, f1_score, recall, presicion, kappa]
+            scores[act] = [winner.fitness,accuracy, f1_score, recall, presicion, kappa]
             print('Termine ', os.path.join(base, act))
-            pd.DataFrame(scores, index=scores['columns']).drop(['columns'], axis=1).T.to_csv(
+            pd.DataFrame(scores, index=scores['columns']).drop(['columns'], axis=1).to_csv(
                 os.path.join(base, 'metrics.csv'))
     return pd.DataFrame(scores, index=scores['columns']).drop(['columns'], axis=1).T
 
@@ -196,4 +198,4 @@ def bring_NEAT_model(X_train, X_test, y_train, y_test, config_path, model_path, 
     scores['precision'] = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
     scores['kappa'] = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(n_targets))
     scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(n_targets), normalize='true')
-    return winner_net, y_test, pred_targets, scores
+    return winner, winner_net, y_test, pred_targets, scores
