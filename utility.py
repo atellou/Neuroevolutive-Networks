@@ -118,7 +118,8 @@ def files_tour(X_train, X_test, y_train, y_test, base, generations, config_name,
             else:
                 config = modify_config(os.path.join(base, config_name),  # crate the config file
                                        activation_def=act, fitnes_th=1, n_inputs=col, n_outputs=n_targets)
-            print('Configuration parameters:'
+            if verbose:
+                print('Configuration parameters:'
                   '\nActivation function:', config.genome_config.activation_default,
                   '\nActivation options:', config.genome_config.activation_options,
                   '\nNumber of entries:', config.genome_config.num_inputs,
@@ -163,7 +164,7 @@ def replay_genome(genome_path):
     return genome
 
 def bring_NEAT_model(X_train, X_test, y_train, y_test, config_path, model_path, act,
-                     act_functions=['relu', 'sigmoid', 'tanh', 'vary']):
+                     act_functions=['relu', 'sigmoid', 'tanh', 'vary'], wanted_c=False):
     """
     :param X_... or y_...: (array) Data to train and test
     :param config_path: (Object or Str) Configuration file from NEAT, could be the objecto or the path
@@ -192,10 +193,12 @@ def bring_NEAT_model(X_train, X_test, y_train, y_test, config_path, model_path, 
     prediction = [winner_net.activate(xi) for xi in X_test]
     scores = {}
     pred_targets = np.argmax(prediction, axis=1)
+    scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(n_targets), normalize='true')
+    if wanted_c:
+        return pd.DataFrame(scores['c_matrix'], index = ['Normal','Light','Moderate','Severe'], columns = ['Normal','Light','Moderate','Severe'])
     scores['accuracy'] = sklearn.metrics.accuracy_score(y_test, pred_targets)
     scores['recall'] = sklearn.metrics.recall_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
     scores['f1_score'] = sklearn.metrics.f1_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
     scores['precision'] = sklearn.metrics.precision_score(y_test, pred_targets, labels=range(n_targets), average='weighted')
     scores['kappa'] = sklearn.metrics.cohen_kappa_score(y_test, pred_targets, labels=range(n_targets))
-    scores['c_matrix'] = sklearn.metrics.confusion_matrix(y_test, pred_targets, labels=range(n_targets), normalize='true')
     return winner, winner_net, y_test, pred_targets, scores
